@@ -137,8 +137,8 @@ def createsite(APIURL,APIKEY, name, urls, parent_id, scan_configuration_ids, pro
             input: {
                 name: $name
                 parent_id: $parent_id
-                scope: {
-                    included_urls: $urls
+                scope_v2: {
+                    start_urls: $urls
                     protocol_options: $protocol_options
                 }
                 application_logins: {
@@ -155,8 +155,8 @@ def createsite(APIURL,APIKEY, name, urls, parent_id, scan_configuration_ids, pro
             site {
                 id
                 parent_id
-                scope {
-                    included_urls
+                scope_v2 {
+                    start_urls
                     protocol_options
                 }
                 application_logins {
@@ -483,6 +483,68 @@ def updatesitescope(APIURL, APIKEY, site_id, included, excluded, protocoloptions
     if (output is True):
         return result
 
+#
+# Move URLs to another folder
+#
+    
+def movesite(APIURL, APIKEY, site_id, newparentfolderid, doprint=True, output=False):
+
+    query = '''
+        mutation MoveSite($siteid: ID!, $newparentfolderid: ID!){
+
+            move_site(
+                input: {
+                    site_id : $siteid
+                    parent_id: $newparentfolderid
+                } 
+            )
+            {
+            site {
+      id
+      name
+      parent_id
+      scope_v2 {
+        start_urls
+        in_scope_url_prefixes
+        out_of_scope_url_prefixes
+        protocol_options
+      }
+      application_logins {
+        login_credentials {
+          id
+          label
+          username
+          password
+        }
+        recorded_logins {
+          id
+          label
+          script
+        }
+      }
+      scan_configurations {
+        id
+      }
+      email_recipients {
+        id
+        email
+      }
+      ephemeral
+    }
+  }
+        }'''
+    
+    variables = {
+        "siteid": site_id,
+        "newparentfolderid": newparentfolderid
+    }
+
+    result = bseeptgraphql.dographql(APIURL, APIKEY, query, variables)
+
+    if (doprint is True):
+        print(json.dumps(result))
+    if (output is True):
+        return result
 
 #
 # Update site scope URLs using the v2 mutation
