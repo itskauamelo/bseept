@@ -8,7 +8,8 @@ All output returned is in JSON format which can be parsed and prettified by pipi
 
 ## Notice
 
-This tool is not actively maintained by PortSwigger. However, we welcome pull requests that contribute to this repository.
+This tool is not actively maintained by PortSwigger. 
+!!!! Updates have been made to scope_v2 (by itskauamelo) !!!!
 
 ## Features
 
