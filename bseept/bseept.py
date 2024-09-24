@@ -494,6 +494,9 @@ def main():
     if(args.command == "movefolder"):
         bseeptfolders.movefolder(apiurl, apikey, args.folderid, args.parentfolderid)
 
+    if(args.command == "movesite"):
+        bseeptsites.movesite(apiurl, apikey, args.siteid, args.newparentfolderid)
+
     #
     # Agents
     if(args.command == "renameagent"):
